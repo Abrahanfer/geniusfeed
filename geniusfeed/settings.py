@@ -24,7 +24,7 @@ SECRET_KEY = 'l9db(2933^-*_bdnno=wmlzsk&_)cmh8dqs-pm0un&9ml$o)b3'
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
