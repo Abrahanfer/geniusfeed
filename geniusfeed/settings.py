@@ -92,6 +92,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-#Host random
+# True X_FORWARDED_HOTS for proxy redirection
 USE_X_FORWARDED_HOST = True
+# Host setting
 HOST = os.environ.get('HOST', 'http://localhost')
