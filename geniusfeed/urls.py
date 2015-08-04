@@ -3,6 +3,8 @@ from django.contrib import admin
 #Using url like models?
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
+#Custom views from geniusfeed
+from geniusfeed import views
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -26,7 +28,9 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'geniusfeed.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
+    url(r'^feeds/$', views.feed_list),
+    url(r'^feeds/(?P<pk>[0-9]+)/$', views.feed_details),
     url(r'^', include(router.urls)),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api-auth/',include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/',include('rest_framework.urls', namespace='rest_framework')),
 )
