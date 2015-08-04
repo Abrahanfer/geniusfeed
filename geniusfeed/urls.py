@@ -3,6 +3,7 @@ from django.contrib import admin
 #Using url like models?
 from django.contrib.auth.models import User
 from rest_framework import routers, serializers, viewsets
+from rest_framework.urlpatterns import format_suffix_patterns
 #Custom views from geniusfeed
 from geniusfeed import views
 
@@ -34,3 +35,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/',include('rest_framework.urls', namespace='rest_framework')),
 )
+
+urlpatterns = format_suffix_patterns(urlpatterns)
