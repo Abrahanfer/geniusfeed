@@ -5,16 +5,7 @@ from rest_framework.parsers import JSONParser
 from geniusfeed.models import Feed, FeedItem
 from geniusfeed.serializers import FeedSerializer
 
-class JSONResponse(HttpResponse):
-    """
-    An HttpRepsonse that renders its content into JSON
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
-
-@csrf_exempt
+@api_view(['GET', 'POST'])
 def feed_list(request):
     """
     List all feed, or create a new feed
@@ -22,17 +13,17 @@ def feed_list(request):
     if request.method == 'GET':
         feeds = Feed.objects.all()
         serializer = FeedSerializer(feeds, many=True)
-        return JSONResponse(serializer.data)
+        return Response(serializer.data)
 
     elif request.method == 'POST':
         data = JSONParser().parser(request)
         serializer = FeedSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return JSONResponse(serializer.data, status=201)
-        return JSONResponse(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_exempt
+@api_view(['GET', 'PUT', 'DELETE'])
 def feed_details(request, pk):
     """
     Return detail view for Feed
@@ -40,20 +31,19 @@ def feed_details(request, pk):
     try:
         feed = Feed.objects.get(pk=pk)
     except Feed.DoesNotExist:
-        return HttpResponse(status=404)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'GET':
         serializer = FeedSerializer(feed)
-        return JSONResponse(serializer.data)
+        return Response(serializer.data)
 
     elif request.method == 'PUT':
-        data = JSONParser().parser(request)
-        serializer = FeedSerializer(feed, data=data)
+        serializer = FeedSerializer(feed, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JSONResponse(serializer.data)
-        return JSONResponse(serializer.errors, status=400)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         feed.delete()
-        return HttpResponse(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
