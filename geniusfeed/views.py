@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from geniusfeed.models import Feed, FeedItem
 from geniusfeed.serializers import FeedSerializer, UserSerializer
 from django.contrib.auth.models import User
-
+from geniusfeed.permissions import IsOwnerOrReadOnly
 
 #@permission_classes((permissions.AllowAny,))
 class FeedList(generics.ListCreateAPIView):
@@ -18,7 +18,8 @@ class FeedList(generics.ListCreateAPIView):
 
 #@permission_classes((permissions.AllowAny,))
 class FeedDetails(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly)
     queryset = Feed.objects.all()
     serializer_class = FeedSerializer
 

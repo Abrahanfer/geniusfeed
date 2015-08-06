@@ -23,7 +23,7 @@ class FeedSerializer(serializers.ModelSerializer):
     #     instance.save()
 
     #     return instance
-    users = serializers.ReadOnlyField(source='users.username')
+    #users = serializers.ReadOnlyField(source='users')
 
     class Meta:
         model = Feed
