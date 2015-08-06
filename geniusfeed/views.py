@@ -4,53 +4,45 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import status, permissions
+from rest_framework import status, permissions, mixins, generics
 from rest_framework.views import APIView
 from geniusfeed.models import Feed, FeedItem
 from geniusfeed.serializers import FeedSerializer
 
+
 @permission_classes((permissions.AllowAny,))
-class FeedList(APIView):
+class FeedList(mixins.ListModelMixin,
+               mixins.CreateModelMixin,
+               generics.GenericAPIView):
     """
     List all feed, or create a new feed
     """
-    def get(self, request, format=None):
-        feeds = Feed.objects.all()
-        serializer = FeedSerializer(feeds, many=True)
-        return Response(serializer.data)
+    queryset = Feed.objects.all()
+    serializer_class = FeedSerializer
 
-    def post(self, request, format=None):
-        serializer = FeedSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
 
 @permission_classes((permissions.AllowAny,))
-class FeedDetails(APIView):
+class FeedDetails(mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
+                  mixins.DestroyModelMixin,
+                  generics.GenericAPIView):
     """
     Return detail view for Feed
     """
-    def get_object(self, pk):
-        try:
-            feed = Feed.objects.get(pk=pk)
-        except Feed.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    queryset = Feed.objects.all()
+    serializer_class = FeedSerializer
 
-    def get(self, request, pk, format=None):
-        feed = self.get_object(pk)
-        serializer = FeedSerializer(feed)
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
-    def put(self, request, pk, format=None):
-        feed = self.get_object(pk)
-        serializer = FeedSerializer(feed, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
-    def delete(self, request, pk, format=None):
-        feed = self.get_object(pk)
-        feed.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
