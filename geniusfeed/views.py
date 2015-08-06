@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import permissions, generics
 from geniusfeed.models import Feed, FeedItem
 from geniusfeed.serializers import FeedSerializer
 
