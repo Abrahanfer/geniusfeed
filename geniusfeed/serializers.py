@@ -31,7 +31,7 @@ class FeedSerializer(serializers.HyperlinkedModelSerializer):
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    feed_set = serializers.HyperlinkedRelatedField(many=True, view_name='feed-details', read_only=True)
+    feed_set = serializers.HyperlinkedRelatedField(many=True, view_name='feed-detail', read_only=True)
 
     class Meta:
         model = User

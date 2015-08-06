@@ -9,15 +9,6 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 
-@api_view(('GET',))
-@permission_classes((permissions.AllowAny,))
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'feeds': reverse('feed-list', request=request, format=format)
-    })
-
-
 #@permission_classes((permissions.AllowAny,))
 class FeedViewSet(viewsets.ModelViewSet):
     """
