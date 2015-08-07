@@ -1,6 +1,6 @@
 from django.forms import widgets
 from rest_framework import serializers
-from geniusfeed.models import Feed, FeedItem
+from geniusfeed.models import Feed, FeedItem, FeedItemRead
 from django.contrib.auth.models import User
 
 class FeedSerializer(serializers.HyperlinkedModelSerializer):
@@ -25,9 +25,11 @@ class FeedSerializer(serializers.HyperlinkedModelSerializer):
     #     return instance
         #users = serializers.ReadOnlyField()
 
+    feed_items = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='feed-item-detail')
+
     class Meta:
         model = Feed
-        fields = ('title', 'link', 'users')
+        fields = ('title', 'link', 'users', 'feed_items')
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -36,3 +38,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'feed_set')
+
+class FeedItemSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = FeedItem
+        fields = ('title', 'link', 'feed')
+
+class FeedItemReadSerializer(serializers.HyperlinkedModelSerializer):
+    title = serializers.StringRelatedField(source='feed_item.title')
+    link = serializers.StringRelatedField(source='feed_item.link')
+
+    class Meta:
+        model = FeedItemRead
+        fields = ('update_date', 'read', 'fav', 'title', 'link')

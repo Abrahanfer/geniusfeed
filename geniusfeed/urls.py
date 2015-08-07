@@ -15,6 +15,8 @@ from geniusfeed import views
 router = routers.DefaultRouter()
 router.register(r'feeds', views.FeedViewSet)
 router.register(r'users', views.UserViewSet)
+router.register(r'feed_items', views.FeedItemViewSet)
+
 
 
 # Wire up our API using automatic URL routing.
