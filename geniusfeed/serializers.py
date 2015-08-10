@@ -25,7 +25,7 @@ class FeedSerializer(serializers.HyperlinkedModelSerializer):
     #     return instance
         #users = serializers.ReadOnlyField()
 
-    feed_items = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='feed-item-detail')
+    feed_items = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='feeditem-detail')
 
     class Meta:
         model = Feed
