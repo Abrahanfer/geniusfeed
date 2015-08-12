@@ -39,16 +39,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('username', 'email', 'feed_set')
 
+class FeedItemReadSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = FeedItemRead
+        fields = ('update_date', 'read', 'fav', 'feed_item', 'user')
+
 class FeedItemSerializer(serializers.HyperlinkedModelSerializer):
+    #feeditemread_set = FeedItemReadSerializer(many=True)
 
     class Meta:
         model = FeedItem
         fields = ('title', 'link', 'feed')
-
-class FeedItemReadSerializer(serializers.HyperlinkedModelSerializer):
-    title = serializers.StringRelatedField(source='feed_item.title')
-    link = serializers.StringRelatedField(source='feed_item.link')
-
-    class Meta:
-        model = FeedItemRead
-        fields = ('update_date', 'read', 'fav', 'title', 'link')

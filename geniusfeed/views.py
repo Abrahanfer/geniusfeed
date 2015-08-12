@@ -4,7 +4,7 @@ from geniusfeed.models import Feed, FeedItem, FeedItemRead
 from geniusfeed.serializers import FeedSerializer, UserSerializer
 from geniusfeed.serializers import FeedItemSerializer, FeedItemReadSerializer
 from django.contrib.auth.models import User
-from geniusfeed.permissions import IsOwnerOrReadOnly
+from geniusfeed.permissions import IsOwnerOrReadOnly, IsOwner
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -28,7 +28,7 @@ class FeedViewSet(viewsets.ModelViewSet):
 class FeedItemViewSet(viewsets.ModelViewSet):
     queryset = FeedItem.objects.all()
     serializer_class = FeedItemSerializer
-    permissions_class = (permissions.AllowAny,)
+    permissions_class = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 
@@ -39,7 +39,11 @@ class FeedItemReadViewSet(viewsets.ModelViewSet):
     """
     queryset = FeedItemRead.objects.all()
     serializer_class = FeedItemReadSerializer
-    permissions_class = (permissions.AllowAny,)
+    permissions_class = (IsOwner,)
+
+    def perform_create(self, serializer):
+        feeditemread = serializer.save()
+        feeditemread.user = self.request.user
 
 
 @permission_classes((permissions.AllowAny,))

@@ -12,6 +12,14 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        print(obj.users)
+        # Write permissions are only allowed to the user of the feeds
+        return  request.user in obj.users.all()
+
+class IsOwner(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of an object see it and edit it.
+    """
+
+    def has_object_permission(self, request, view, obj):
         # Write permissions are only allowed to the user of the feeds
         return  request.user in obj.users.all()

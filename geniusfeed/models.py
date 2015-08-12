@@ -19,5 +19,5 @@ class FeedItemRead(models.Model):
     feed_item = models.ForeignKey(FeedItem)
     user = models.ForeignKey(User)
     update_date = models.DateField()
-    read = models.BooleanField()
-    fav = models.BooleanField()
+    read = models.NullBooleanField(default=False)
+    fav = models.NullBooleanField(default=False)
