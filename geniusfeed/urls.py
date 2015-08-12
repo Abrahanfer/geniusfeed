@@ -16,7 +16,7 @@ router = routers.DefaultRouter()
 router.register(r'feeds', views.FeedViewSet)
 router.register(r'users', views.UserViewSet)
 router.register(r'feed_items', views.FeedItemViewSet)
-router.register(r'feed_item_reads', views.FeedItemReadViewSet)
+router.register(r'feed_item_reads', views.FeedItemReadViewSet, base_name='feed_item_read')
 
 
 
