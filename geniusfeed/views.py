@@ -26,10 +26,14 @@ class FeedViewSet(viewsets.ModelViewSet):
         feed.users.add(self.request.user)
 
 class FeedItemViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+    """
     queryset = FeedItem.objects.all()
     serializer_class = FeedItemSerializer
-    permissions_class = (permissions.IsAuthenticatedOrReadOnly,)
-
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                         IsOwnerOrReadOnly)
 
 
 class FeedItemReadViewSet(viewsets.ModelViewSet):
