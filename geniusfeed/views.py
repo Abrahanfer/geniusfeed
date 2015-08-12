@@ -1,5 +1,5 @@
 from rest_framework import permissions, generics, viewsets
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import list_route, permission_classes
 from geniusfeed.models import Feed, FeedItem, FeedItemRead
 from geniusfeed.serializers import FeedSerializer, UserSerializer
 from geniusfeed.serializers import FeedItemSerializer, FeedItemReadSerializer
@@ -52,6 +52,18 @@ class FeedItemReadViewSet(viewsets.ModelViewSet):
         feeditemread.user = self.request.user
 
     #Get unread feedItems
+    @list_route()
+    def unread(self, request):
+        unread_feed_items = FeedItemRead.objects.filter(user=self.request.user.pk).exclude(read=True)
+
+        page = self.paginate_queryset(unread_feed_items)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(unread_feed_items, many=True)
+        return Response(serializer.data)
+
 @permission_classes((permissions.AllowAny,))
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """

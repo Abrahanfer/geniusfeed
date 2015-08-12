@@ -41,8 +41,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class FeedItemSerializer(serializers.HyperlinkedModelSerializer):
     #feeditemread_set = FeedItemReadSerializer(many=True)
-    feed = serializers.PrimaryKeyRelatedField(queryset='feed')
-
+    #feed = serializers.PrimaryKeyRelatedField(queryset='feed')
+    feed = FeedSerializer(read_only=True)
 
     class Meta:
         model = FeedItem
@@ -54,4 +54,3 @@ class FeedItemReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedItemRead
         fields = ('pk', 'update_date', 'read', 'fav', 'feed_item')
-        read_only_fields = ('feed_item',)
