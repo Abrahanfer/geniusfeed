@@ -51,6 +51,7 @@ class FeedItemReadViewSet(viewsets.ModelViewSet):
         feeditemread = serializer.save()
         feeditemread.user = self.request.user
 
+    #Get unread feedItems
 @permission_classes((permissions.AllowAny,))
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """

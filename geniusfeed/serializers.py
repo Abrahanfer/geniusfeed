@@ -29,7 +29,7 @@ class FeedSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Feed
-        fields = ('title', 'link', 'users', 'feed_items')
+        fields = ('pk', 'title', 'link', 'feed_items')
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -39,15 +39,19 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('username', 'email', 'feed_set')
 
-class FeedItemReadSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = FeedItemRead
-        fields = ('update_date', 'read', 'fav', 'feed_item', 'user')
-
 class FeedItemSerializer(serializers.HyperlinkedModelSerializer):
     #feeditemread_set = FeedItemReadSerializer(many=True)
+    feed = serializers.PrimaryKeyRelatedField(queryset='feed')
+
 
     class Meta:
         model = FeedItem
-        fields = ('title', 'link', 'feed')
+        fields = ('pk', 'title', 'link', 'feed')
+
+class FeedItemReadSerializer(serializers.ModelSerializer):
+    feed_item = FeedItemSerializer(read_only=True)
+
+    class Meta:
+        model = FeedItemRead
+        fields = ('pk', 'update_date', 'read', 'fav', 'feed_item')
+        read_only_fields = ('feed_item',)
